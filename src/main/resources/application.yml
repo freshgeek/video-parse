@@ -1,0 +1,26 @@
+spring:
+
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      min-idle: 3
+      initial-size: 3
+      max-wait: 30000
+      validation-query: select 1 from dual
+      test-on-borrow: true
+    url: jdbc:mysql://192.168.35.3:3306/video_parse?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+  thymeleaf:
+    mode: HTML5
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis-plus:
+  type-aliases-package: com.example.videoparse.entity
+server:
+  port: 8011
+

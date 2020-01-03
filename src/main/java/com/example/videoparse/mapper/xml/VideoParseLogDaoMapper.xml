@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.videoparse.mapper.VideoParseLogDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.videoparse.entity.VideoParseLog">
+        <id column="id" property="id" />
+        <result column="parse_id" property="parseId" />
+        <result column="url" property="url" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <result column="ip" property="ip" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parse_id, url, content, create_time, ip
+    </sql>
+
+</mapper>

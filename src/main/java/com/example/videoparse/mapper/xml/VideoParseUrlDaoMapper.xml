@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.videoparse.mapper.VideoParseUrlDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.videoparse.entity.VideoParseUrl">
+        <id column="id" property="id" />
+        <result column="parse_url" property="parseUrl" />
+        <result column="status" property="status" />
+        <result column="mark" property="mark" />
+        <result column="fail_weight" property="failWeight" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parse_url, status, mark, fail_weight
+    </sql>
+
+</mapper>

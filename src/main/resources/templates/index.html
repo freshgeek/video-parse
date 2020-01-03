@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>我的生活</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+
+    <style>
+        iframe {
+            width: 100%;
+            height: 700px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="page-group">
+    <div id="page-simple-card" class="page">
+        <header class="bar bar-nav">
+            <h1 class="title">免费视频解析</h1>
+        </header>
+
+        <div class="content">
+            <div class=" content-padded">
+                <div class="searchbar row">
+                    <div class="search-input col-85">
+                        <input type="search" id='search' placeholder='输入视频链接...'/>
+                    </div>
+                    <a class="button button-fill button-primary col-15" id="search-btn"><span
+                            class="icon icon-search"></span></a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    视频名
+                    <button class="button button-link button-nav pull-right open-panel ">
+                        选集
+                        <span class="icon icon-menu"></span>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="card-content-inner">
+                        <iframe id="viewer">
+                        </iframe>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="link">上一集</a>
+                    <a href="#" class="link">下一集</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Left Panel with Reveal effect -->
+    <div class="panel panel-right panel-reveal theme-dark" id='panel-left-demo'>
+        <div class="content-block">
+            <p>这是一个侧栏</p>
+            <p>你可以在这里放用户设置页面</p>
+            <p><a href="#" class="close-panel">关闭</a></p>
+        </div>
+        <div class="list-block">
+            <ul>
+                <!-- Text inputs -->
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="icon icon-form-gender"></i></div>
+                        <div class="item-inner">
+                            <div class="item-input">
+                                <select>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Date -->
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="icon icon-form-calendar"></i></div>
+                        <div class="item-inner">
+                            <div class="item-input">
+                                <input type="date" placeholder="Birth day" value="2014-04-30">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Switch (Checkbox) -->
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="icon icon-form-toggle"></i></div>
+                        <div class="item-inner">
+                            <div class="item-input">
+                                <div class="label-switch">
+                                    <input type="checkbox">
+                                    <div class="checkbox"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<!--
+
+<div class="layui-fluid">
+    <div class="layui-container">
+        <div class="layui-form layui-card">
+            <div class="layui-card-header">
+                视频解析
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">
+                        输入视频地址
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" lay-verify="url" name="url">
+                    </div>
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit lay-filter="start-btn">
+                            开始观看
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <iframe id="viewer">
+
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+
+
+<script src="/webjars/layui/2.5.5/layui.js"></script>
+<script>
+    $.init();
+
+
+    //config的设置是全局的
+    layui.config({
+        base: '/layui/js/extends/' //假设这是你存放拓展模块的根目录
+    }).extend({ //设定模块别名
+        js_tools: 'js_tools'
+    });
+
+    layui.use(['form', 'js_tools'], function () {
+        //     var $ = layui.jquery;
+        var form = layui.form;
+        var js_tools = layui.js_tools;
+        var list;
+        var index = 0;
+
+        js_tools.quick_get("/admin/api/videoParseUrl/findDouble", null, function (res) {
+            list = res.body;
+            console.log(res);
+            console.log(list);
+        });
+
+        $('#search-btn').on('click', function () {
+            alert(list[index]['parseUrl'] + $('#search').val());
+            $('#viewer').attr('src', 'https://jx.618g.com/?url=' + $('#search').val());
+        });
+    });
+
+</script>
+</body>
+</html>
