@@ -2,8 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <meta name="referrer" content="never">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>我的生活</title>
+    <title>自由追剧</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="/favicon.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,17 +15,26 @@
     <style>
         iframe {
             width: 100%;
-            height: 700px;
+            padding: 0;
+            margin: 0;
+            height: 50vh;
+            overflow: hidden;
+            border-width: 0px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
     </style>
 
 </head>
 <body>
 
-<div class="page-group">
-    <div id="page-simple-card" class="page">
+<div class="page-group" id="app">
+    <div id="page-simple-card" class="page ">
         <header class="bar bar-nav">
-            <h1 class="title">免费视频解析</h1>
+            <h1 class="title">自由追剧</h1>
         </header>
 
         <div class="content">
@@ -39,120 +49,63 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    视频名
-                    <button class="button button-link button-nav pull-right open-panel ">
+                    <span id="video-name" style="width: 70%">视频名</span>
+                    <a href="#" class="link pull-right open-panel">
                         选集
                         <span class="icon icon-menu"></span>
-                    </button>
+                    </a>
                 </div>
                 <div class="card-content">
                     <div class="card-content-inner">
-                        <iframe id="viewer">
+                        <iframe allowfullscreen allowusermedia id="viewer">
                         </iframe>
+                        <p id="log">
+                        </p>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="link">上一集</a>
-                    <a href="#" class="link">下一集</a>
+                    <a href="#" class="link" id="pre-video">上一集</a>
+                    <input type="hidden" id="current" value="">
+                    <a href="#" class="link" id="last-video">下一集</a>
                 </div>
             </div>
         </div>
     </div>
     <!-- Left Panel with Reveal effect -->
     <div class="panel panel-right panel-reveal theme-dark" id='panel-left-demo'>
-        <div class="content-block">
-            <p>这是一个侧栏</p>
-            <p>你可以在这里放用户设置页面</p>
-            <p><a href="#" class="close-panel">关闭</a></p>
-        </div>
-        <div class="list-block">
-            <ul>
-                <!-- Text inputs -->
-                <li>
-                    <div class="item-content">
-                        <div class="item-media"><i class="icon icon-form-gender"></i></div>
-                        <div class="item-inner">
-                            <div class="item-input">
-                                <select>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <!-- Date -->
-                <li>
-                    <div class="item-content">
-                        <div class="item-media"><i class="icon icon-form-calendar"></i></div>
-                        <div class="item-inner">
-                            <div class="item-input">
-                                <input type="date" placeholder="Birth day" value="2014-04-30">
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <!-- Switch (Checkbox) -->
-                <li>
-                    <div class="item-content">
-                        <div class="item-media"><i class="icon icon-form-toggle"></i></div>
-                        <div class="item-inner">
-                            <div class="item-input">
-                                <div class="label-switch">
-                                    <input type="checkbox">
-                                    <div class="checkbox"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+        <div class="content-block" id="detail">
+            <p><a class="close-panel button">关闭</a></p>
         </div>
     </div>
 
 </div>
-<!--
-
-<div class="layui-fluid">
-    <div class="layui-container">
-        <div class="layui-form layui-card">
-            <div class="layui-card-header">
-                视频解析
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-form-item">
-                    <div class="layui-form-label">
-                        输入视频地址
-                    </div>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" lay-verify="url" name="url">
-                    </div>
-                    <div class="layui-input-inline">
-                        <button class="layui-btn layui-btn-fluid layui-btn-normal" lay-submit lay-filter="start-btn">
-                            开始观看
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-card-body">
-                <iframe id="viewer">
-
-                </iframe>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-
 <script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
 <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
 
 
 <script src="/webjars/layui/2.5.5/layui.js"></script>
+
+<script type="text/html" th:inline="none" id="model">
+    <p><a class="close-panel button">关闭</a></p>
+    <h2>如果没有更新集数,<a id="refresh-video-btn" data-key="{{d.body.key}}">点我更新</a></h2>
+    <p>{{d.body.intro}}</p>
+    <img id="cover" src="{{d.body.coverUrl}}">
+    <div class="row" id="video-list">
+        {{# layui.each(d.body.videos,function(i,e){ }}
+        <div class="col-33">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-content-inner">
+                        <a data-url="{{e.url}}" id="{{e.no.trim()}}">{{e.no}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{# }); }}
+    </div>
+</script>
 <script>
     $.init();
-
 
     //config的设置是全局的
     layui.config({
@@ -161,23 +114,78 @@
         js_tools: 'js_tools'
     });
 
-    layui.use(['form', 'js_tools'], function () {
+    layui.use(['form', 'js_tools', 'laytpl'], function () {
         //     var $ = layui.jquery;
         var form = layui.form;
+        var laytpl = layui.laytpl;
         var js_tools = layui.js_tools;
         var list;
         var index = 0;
+        var current = 0;
 
         js_tools.quick_get("/admin/api/videoParseUrl/findDouble", null, function (res) {
             list = res.body;
+            index = 0;
             console.log(res);
             console.log(list);
         });
 
         $('#search-btn').on('click', function () {
-            alert(list[index]['parseUrl'] + $('#search').val());
-            $('#viewer').attr('src', 'https://jx.618g.com/?url=' + $('#search').val());
+            $.showPreloader('搜索中');
+            if (js_tools.isUrl($('#search').val())) {
+                $('#viewer').attr('src', list[index].parseUrl + $('#search').val());
+            } else {
+                js_tools.quick_post("/search/iqiyi/" + $('#search').val(), null, function (res) {
+                    var b = res.body;
+                    //标题
+                    $('#video-name').text(b.title);
+                    //简介
+                    laytpl($('#model').html()).render(res, function (h) {
+                        $('#detail').html(h);
+                    });
+                });
+            }
+            $.hidePreloader();
         });
+
+        function rend(o){
+            $('#viewer').attr('src', list[index].parseUrl + o.data('url'));
+            $('#viewer').attr('data-video-no',o.attr('id'));
+            $('#log').text(o.attr('id')+'> = >'+list[index].parseUrl + o.data('url'));
+            current = o.attr('id');
+        }
+
+        $('#detail').on('click', 'a[data-url]', function () {
+            rend($(this));
+            $.closePanel();
+        });
+
+        $('body').on('click', '#refresh-video-btn', function () {
+            js_tools.quick_post("/search/iqiyi/" + $(this).data('key'), {refresh: true}, function (res) {
+                var b = res.body;
+                //标题
+                $('#video-name').text(b.title);
+                //简介
+                laytpl($('#model').html()).render(res, function (h) {
+                    $('#detail').html(h);
+                });
+            });
+        });
+        function jump(i){
+            if ($('#'+i).length<=0){
+                $.alert('没有了,可以尝试点击选集中[更新]');
+                return ;
+            }
+            rend($('#'+i));
+        }
+
+        $('#pre-video').on('click',function () {
+            jump(parseInt(current)-1);
+        });
+        $('#last-video').on('click',function () {
+            jump(parseInt(current)+1);
+        });
+
     });
 
 </script>

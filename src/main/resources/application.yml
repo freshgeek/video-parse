@@ -18,9 +18,15 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  redis:
+    database: 3
+    host: 192.168.35.3
+    port: 6378
+    client-name: video
+  cache:
+    type: redis
 
 mybatis-plus:
   type-aliases-package: com.example.videoparse.entity
 server:
   port: 8011
-

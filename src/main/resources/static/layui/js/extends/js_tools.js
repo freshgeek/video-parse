@@ -21,6 +21,9 @@ layui.define(['layer', 'form','laytpl','laypage', 'jquery'], function (exports) 
         get: function (e) {
             return $(e);
         },
+        isUrl:function(url){
+            return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/.test(url);
+        },
         isSucc:function(rs){
             return rs.code==ws.successCode;
         },
