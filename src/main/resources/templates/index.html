@@ -6,12 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>自由追剧</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
     <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
-
     <style>
         iframe {
             width: 100%;
@@ -40,8 +38,11 @@
         <div class="content">
             <div class=" content-padded">
                 <div class="searchbar row">
-                    <div class="search-input col-85">
-                        <input type="search" id='search' placeholder='输入视频链接...'/>
+                    <div class="search-input col-25">
+                        <input type="text" id="pickPlat" placeholder="选择平台,默认爱奇艺">
+                    </div>
+                    <div class="search-input col-60">
+                        <input type="search" id='search' autocomplete="autocomplete" placeholder='输入视频名或链接'/>
                     </div>
                     <a class="button button-fill button-primary col-15" id="search-btn"><span
                             class="icon icon-search"></span></a>
@@ -107,6 +108,20 @@
 <script>
     $.init();
 
+    $("#pickPlat").picker({
+        toolbarTemplate: '<header class="bar bar-nav">\
+          <button class="button button-link pull-left">按钮</button>\
+          <button class="button button-link pull-right close-picker">确定</button>\
+          <h1 class="title">标题</h1>\
+          </header>',
+        cols: [
+            {
+                textAlign: 'center',
+                values: ['爱奇艺','优酷','腾讯']
+            }
+        ]
+    });
+
     //config的设置是全局的
     layui.config({
         base: '/layui/js/extends/' //假设这是你存放拓展模块的根目录
@@ -130,12 +145,20 @@
             console.log(list);
         });
 
+        function convert (z){
+            if (z=='腾讯'){
+                return 'tencent';
+            }
+            return 'iqiyi';
+        }
+
         $('#search-btn').on('click', function () {
-            $.showPreloader('搜索中');
+
+            $.alert('第一次解析速度较慢,请稍后');
             if (js_tools.isUrl($('#search').val())) {
                 $('#viewer').attr('src', list[index].parseUrl + $('#search').val());
             } else {
-                js_tools.quick_post("/search/iqiyi/" + $('#search').val(), null, function (res) {
+                js_tools.quick_post("/search/"+convert($('#pickPlat').val())+"/" + $('#search').val(), null, function (res) {
                     var b = res.body;
                     //标题
                     $('#video-name').text(b.title);
@@ -143,6 +166,7 @@
                     laytpl($('#model').html()).render(res, function (h) {
                         $('#detail').html(h);
                     });
+                    $.alert('解析完成,请选集');
                 });
             }
             $.hidePreloader();
@@ -151,7 +175,8 @@
         function rend(o){
             $('#viewer').attr('src', list[index].parseUrl + o.data('url'));
             $('#viewer').attr('data-video-no',o.attr('id'));
-            $('#log').text(o.attr('id')+'> = >'+list[index].parseUrl + o.data('url'));
+         //   $('#log').text(o.attr('id')+'> = >'+list[index].parseUrl + o.data('url'));
+            $('#log').html('第'+o.attr('id')+'集,链接==><a href="'+list[index].parseUrl + o.data('url')+'">'+list[index].parseUrl + o.data('url')+'</a>');
             current = o.attr('id');
         }
 
@@ -161,7 +186,7 @@
         });
 
         $('body').on('click', '#refresh-video-btn', function () {
-            js_tools.quick_post("/search/iqiyi/" + $(this).data('key'), {refresh: true}, function (res) {
+            js_tools.quick_post("/search/"+convert($('#pickPlat').val())+"/" + $(this).data('key'), {refresh: true}, function (res) {
                 var b = res.body;
                 //标题
                 $('#video-name').text(b.title);

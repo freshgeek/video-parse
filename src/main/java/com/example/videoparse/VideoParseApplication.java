@@ -14,10 +14,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @EnableCaching
+@EnableScheduling
 @EnableSwagger2
 @MapperScan("com.example.videoparse.mapper")
 @SpringBootApplication
@@ -26,6 +29,8 @@ public class VideoParseApplication {
     public static void main(String[] args) {
         SpringApplication.run(VideoParseApplication.class, args);
     }
+
+
 
 
     @Bean

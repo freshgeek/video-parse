@@ -2,16 +2,14 @@ package com.example.videoparse.service.impl;
 
 import com.example.videoparse.spider.entity.SearchItem;
 import com.example.videoparse.spider.iqiyi.IqiyiParse;
+import com.example.videoparse.spider.tx.TencentParse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +27,13 @@ public class SearchService {
 
     @Cacheable(cacheNames = "search", key = "#key", unless = "#result==null")
     public SearchItem searchItem(String type, String key) {
-        if ("youku".equals(type)) {
+        if ("tencent".equals(type)) {
+            TencentParse tencentParse = new TencentParse();
+            Spider.create(tencentParse).addUrl("https://v.qq.com/x/search/?q=" + key).run();
+            SearchItem searchItem = tencentParse.getSearchItem();
+            searchItem.setKey(key);
+            return searchItem;
+        } else if ("youku".equals(type)){
             return null;
         } else {
             IqiyiParse iqiyiParse = new IqiyiParse();
