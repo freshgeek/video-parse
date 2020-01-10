@@ -2,26 +2,22 @@ package com.example.videoparse.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.videoparse.common.BaseController;
 import com.example.videoparse.common.NetUtils;
+import com.example.videoparse.common.Response;
 import com.example.videoparse.entity.VideoParseLog;
+import com.example.videoparse.entity.VideoParseUrl;
 import com.example.videoparse.service.VideoParseLogService;
-import com.sun.deploy.association.utility.AppUtility;
-import io.swagger.annotations.ApiOperation;
+import com.example.videoparse.service.VideoParseUrlService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-
 import org.springframework.web.bind.annotation.*;
 
-import com.example.videoparse.common.BaseController;
-import com.example.videoparse.common.Response;
-import com.example.videoparse.service.VideoParseUrlService;
-import com.example.videoparse.entity.VideoParseUrl;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
